@@ -14,7 +14,8 @@ public class shooter : MonoBehaviour
     GameObject bullet;
     Vector3 gun;
     public GameObject bullet_prefab;
-    Rigidbody2D bullet_rb;
+    bullet_code bullet_rb;
+    public int cooldown;
     // Start is called before the first frame update
     void Start()
     {
@@ -49,11 +50,20 @@ public class shooter : MonoBehaviour
     }
     void shoot()
     {
-        bullet = Instantiate(bullet_prefab,gun,Quaternion.identity);
-        vel.x = Mathf.Cos(angle * Mathf.Deg2Rad);
-        vel.y = Mathf.Sin(angle * Mathf.Deg2Rad);
-        bullet_rb = bullet.GetComponent<Rigidbody2D>();
-        bullet_rb.velocity = vel;
+        angle = Mathf.Atan2(player.tf.position.y - tf.position.y, player.tf.position.x - tf.position.x) * Mathf.Rad2Deg;
+        cooldown--;
+        if (cooldown<=0)
+        {
+            cooldown += 100;
+            gun.x = tf.position.x + Mathf.Cos(angle * Mathf.Deg2Rad);
+            gun.y = tf.position.y + Mathf.Sin(angle * Mathf.Deg2Rad);
+            bullet = Instantiate(bullet_prefab, gun, Quaternion.identity);
+            vel.x = Mathf.Cos(angle * Mathf.Deg2Rad);
+            vel.y = Mathf.Sin(angle * Mathf.Deg2Rad);
+            bullet_rb = bullet.GetComponent<bullet_code>();
+            Debug.Log(vel);
+            bullet_rb.vel = vel*10;
+        }
     }
     private void OnCollisionEnter2D(Collision2D collision)
     {

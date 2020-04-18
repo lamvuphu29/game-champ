@@ -14,14 +14,18 @@ public class player : MonoBehaviour
 
     Vector2 vel;
     Vector2 vel1;
+    bool enable = true;
+    public bool enable2 = true;
     public Collider2D collider;
     public Collider2D sheild_collider;
     public int sheild_hp;
-    public float hp = 1000;
+    public int hp = 1000;
     public Camera cam;
     public Rigidbody2D rb;
     public Transform tf;
     public float speed;
+    public int max_hp;
+    public int max_sheild_hp;
     Vector2 movement;
     Vector2 look_vector;
     // Start is called before the first frame update
@@ -33,30 +37,46 @@ public class player : MonoBehaviour
     // Update is called once per frame
     void FixedUpdate()
     {
+        check();
         move();
         look();
         dash();
         sheild();
     }
+    void check()
+    {
+        if (hp > max_hp)
+        {
+            hp = max_hp;
+        }
+        if (sheild_hp > max_sheild_hp)
+        {
+            sheild_hp = max_sheild_hp;
+        }
+    }
     void move()
     {
-        if (Input.GetAxisRaw("Vertical") == 0)
+        if (enable)
         {
-            movement.x = Input.GetAxisRaw("Horizontal");
+
+            if (Input.GetAxisRaw("Vertical") == 0)
+            {
+                movement.x = Input.GetAxisRaw("Horizontal");
+            }
+            else
+            {
+                movement.x = Mathf.Sin(45 * Mathf.Deg2Rad) * Input.GetAxisRaw("Horizontal");
+            }
+            if (Input.GetAxisRaw("Horizontal") == 0)
+            {
+                movement.y = Input.GetAxisRaw("Vertical");
+            }
+            else
+            {
+                movement.y = Mathf.Sin(45 * Mathf.Deg2Rad) * Input.GetAxisRaw("Vertical");
+            }
+            rb.MovePosition(rb.position + movement * speed * Time.fixedDeltaTime);
         }
-        else
-        {
-            movement.x = Mathf.Sin(45 * Mathf.Deg2Rad) * Input.GetAxisRaw("Horizontal");
-        }
-        if (Input.GetAxisRaw("Horizontal") == 0)
-        {
-            movement.y = Input.GetAxisRaw("Vertical");
-        }
-        else
-        {
-            movement.y = Mathf.Sin(45 * Mathf.Deg2Rad) * Input.GetAxisRaw("Vertical");
-        }
-        rb.MovePosition(rb.position + movement * speed * Time.fixedDeltaTime);
     }
     void look()
     {
@@ -67,11 +87,13 @@ public class player : MonoBehaviour
     {
         if (Input.GetButton("Fire2")&&sheild_hp>0)
         {
+            enable = false;
             sheild_collider.enabled = true;
             sheild_hp--;
         }
         else
         {
+            enable = true;
             sheild_collider.enabled = false;
             if (sheild_hp<2000)
             {
@@ -118,8 +140,8 @@ public class player : MonoBehaviour
         {
             if (Input.GetButton("Fire1")&&Mathf.Abs(rb.rotation-Mathf.Atan2(collision.transform.position.y-tf.position.y, collision.transform.position.x-tf.position.x) *Mathf.Rad2Deg)<90)
             {
-                vel.x = Mathf.Cos(rb.rotation * Mathf.Deg2Rad) * 5;
-                vel.y = Mathf.Sin(rb.rotation * Mathf.Deg2Rad) * 5;
+                vel.x = Mathf.Cos(rb.rotation * Mathf.Deg2Rad) * 10;
+                vel.y = Mathf.Sin(rb.rotation * Mathf.Deg2Rad) * 10;
                 collision.rigidbody.velocity = vel;
                 Debug.Log(vel);
             }
