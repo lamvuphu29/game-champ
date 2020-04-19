@@ -31,7 +31,7 @@ public class shooter : MonoBehaviour
     }
     void move()
     {
-        if (Mathf.Abs(player.tf.position.x - tf.position.x) > 5 && Mathf.Abs(player.tf.position.y - tf.position.y) > 5)
+        if (Mathf.Sqrt(Mathf.Pow(player.tf.position.x-tf.position.x,2)+Mathf.Pow(player.tf.position.y - tf.position.y,2))>3)
         {
 
             angle = Mathf.Atan2(player.tf.position.y - tf.position.y, player.tf.position.x - tf.position.x) * Mathf.Rad2Deg;

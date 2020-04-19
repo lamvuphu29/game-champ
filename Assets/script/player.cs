@@ -15,6 +15,7 @@ public class player : MonoBehaviour
     Vector2 vel;
     Vector2 vel1;
     bool enable = true;
+    public Transform sp;
     public int pierce;
     public bool enable2 = true;
     public Collider2D collider;
@@ -46,6 +47,12 @@ public class player : MonoBehaviour
     }
     void check()
     {
+        if (hp<=0)
+        {
+            tf.position = sp.position;
+            hp = max_hp;
+            sheild_hp = 0;
+        }
         rb.velocity = new Vector2(0, 0);
         if (hp > max_hp)
         {
@@ -141,7 +148,7 @@ public class player : MonoBehaviour
         bullet_code bullet_code;
         if (collision.gameObject.layer == 10)
         {
-            if (Input.GetButton("Fire1")&&Mathf.Abs(rb.rotation-Mathf.Atan2(collision.transform.position.y-tf.position.y, collision.transform.position.x-tf.position.x) *Mathf.Rad2Deg)<90)
+            if (Input.GetButton("Fire1")&&Mathf.Abs(rb.rotation-Mathf.Atan2(collision.transform.position.y-tf.position.y, collision.transform.position.x-tf.position.x) *Mathf.Rad2Deg)<45)
             {
                 bullet_code = collision.gameObject.GetComponent<bullet_code>();
                 bullet_code.pierce = pierce;

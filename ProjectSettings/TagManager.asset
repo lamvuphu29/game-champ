@@ -18,9 +18,9 @@ TagManager:
   - bullet
   - background
   - tower
-  - 
-  - 
-  - 
+  - powerup
+  - hit_wall
+  - wall
   - 
   - 
   - 
