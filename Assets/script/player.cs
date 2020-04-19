@@ -15,6 +15,7 @@ public class player : MonoBehaviour
     Vector2 vel;
     Vector2 vel1;
     bool enable = true;
+    public int pierce;
     public bool enable2 = true;
     public Collider2D collider;
     public Collider2D sheild_collider;
@@ -45,6 +46,7 @@ public class player : MonoBehaviour
     }
     void check()
     {
+        rb.velocity = new Vector2(0, 0);
         if (hp > max_hp)
         {
             hp = max_hp;
@@ -136,10 +138,13 @@ public class player : MonoBehaviour
     }
     private void OnCollisionEnter2D(Collision2D collision)
     {
+        bullet_code bullet_code;
         if (collision.gameObject.layer == 10)
         {
             if (Input.GetButton("Fire1")&&Mathf.Abs(rb.rotation-Mathf.Atan2(collision.transform.position.y-tf.position.y, collision.transform.position.x-tf.position.x) *Mathf.Rad2Deg)<90)
             {
+                bullet_code = collision.gameObject.GetComponent<bullet_code>();
+                bullet_code.pierce = pierce;
                 vel.x = Mathf.Cos(rb.rotation * Mathf.Deg2Rad) * 10;
                 vel.y = Mathf.Sin(rb.rotation * Mathf.Deg2Rad) * 10;
                 collision.rigidbody.velocity = vel;
@@ -147,12 +152,18 @@ public class player : MonoBehaviour
             }
             else
             {
-                hp -= 50;
+                if (!Input.GetButton("Fire2") || (sheild_hp < 0))
+                {
+                    hp -= 50;
+                }
             }
         }
-        if(collision.gameObject.layer == 9 && (!Input.GetButton("Fire2") || !(sheild_hp > 0)))
+        if(collision.gameObject.layer == 9)
         {
-            hp -= 200;
+            if (!Input.GetButton("Fire2") || (sheild_hp < 0))
+            {
+                hp -= 200;
+            }
         }
     }
 }
